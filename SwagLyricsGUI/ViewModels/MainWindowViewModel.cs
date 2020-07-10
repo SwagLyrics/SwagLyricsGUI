@@ -1,24 +1,21 @@
 ﻿using Avalonia;
-using Avalonia.Markup.Xaml;
-using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Platform;
-using Avalonia.Styling;
 using ReactiveUI;
 using SwagLyricsGUI.Models;
 using SwagLyricsGUI.Views;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace SwagLyricsGUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public List<IStyle> Themes { get; set; }
         public static MainWindowViewModel Current { get; set; }
+        public ThemeManager ThemeManager { get; set; }
+        System.Timers.Timer _timer = new System.Timers.Timer(20)
+        {
+            AutoReset = true,            
+        };
+        private double _scrollSpeed = 1;
+        private double t = 0;
+
 
         private int _themeIndex = 1;
         public int ThemeIndex
@@ -27,15 +24,40 @@ namespace SwagLyricsGUI.ViewModels
             set
             {
                 this.RaiseAndSetIfChanged(ref _themeIndex, value);
-                ChangeTheme(value);
+                ThemeManager.ChangeTheme(value);
             }
         }
+
+        private bool _autoScroll = true;
+        public bool AutoScroll
+        {
+            get => _autoScroll;
+            set
+            {
+                _autoScroll = value;
+                this.RaisePropertyChanged("AutoScroll");
+            }
+        }
+
+        private Vector _scrollBarOffset;
+
+        public Vector ScrollBarOffset
+        {
+            get => _scrollBarOffset;
+            set => this.RaiseAndSetIfChanged(ref _scrollBarOffset, value);
+        }
+
 
         private string _lyrics = "";
         public string Lyrics
         {
             get => _lyrics;
-            set => this.RaiseAndSetIfChanged(ref _lyrics, value);
+            set 
+            { 
+                this.RaiseAndSetIfChanged(ref _lyrics, value);
+                if(AutoScroll)
+                    StartAutoScroll();
+            }
         }
 
         private string _song = "Nothing is playing";
@@ -49,41 +71,35 @@ namespace SwagLyricsGUI.ViewModels
         public MainWindowViewModel()
         {
             Current = this;
-            LoadThemes();
+            ThemeManager = new ThemeManager();
+            ThemeManager.LoadThemes();
             _bridge.GetLyrics();
+            _bridge.OnNewSong += _bridge_OnNewSong;
+            _timer.Elapsed += _timer_Elapsed;
         }
 
-        private void LoadThemes()
+        private void _bridge_OnNewSong(object sender, System.EventArgs e)
         {
-            var dark = new StyleInclude(new Uri("resm:Styles?assembly=SwagLyricsGUI"))
-            {
-                Source = new Uri("resm:Avalonia.Themes.Default.Accents.BaseDark.xaml?assembly=Avalonia.Themes.Default")
-            };
-            var light = new StyleInclude(new Uri("resm:Styles?assembly=SwagLyricsGUI"))
-            {
-                Source = new Uri("resm:Avalonia.Themes.Default.Accents.BaseLight.xaml?assembly=Avalonia.Themes.Default")
-            };
-
-            Themes = new List<IStyle>()
-            {
-               light.Loaded,
-                dark.Loaded,
-                Application.Current.Styles[0]
-
-            };
+            ScrollBarOffset = new Vector(0, 0);
+            t = 0;
         }
 
-        private void ChangeTheme(int index)
+        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (index > Themes.Count - 1 || index < 0) return;
-            if (MainWindow.Current.Styles.Count == 0)
+            if (AutoScroll)
             {
-                MainWindow.Current.Styles.Add(Themes[index]);
+                ScrollBarOffset = new Vector(0, MathEx.Lerp(0, MainWindow.Current.ScrollViewerVieportHeight, t));
             }
-            else
+            t += _scrollSpeed * 0.0001;
+        }
+
+        private void StartAutoScroll()
+        {
+            if (!_timer.Enabled)
             {
-                MainWindow.Current.Styles[0] = Themes[index];
+                _timer.Start();
             }
+
         }
     }
 }

@@ -12,6 +12,8 @@ namespace SwagLyricsGUI.Views
     public class MainWindow : Window
     {
         public static MainWindow Current { get; set; }
+        private ScrollViewer sv;
+        public double ScrollViewerVieportHeight => sv.Viewport.Height;
         public MainWindow()
         {
             InitializeComponent();
@@ -19,6 +21,7 @@ namespace SwagLyricsGUI.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
+            sv = this.Find<ScrollViewer>("scrollViewer");
         }
 
         private void InitializeComponent()
