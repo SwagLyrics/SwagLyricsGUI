@@ -1,0 +1,28 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:SwagLyricsGUI.ViewModels;assembly=SwagLyricsGUI"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="SwagLyricsGUI.Views.MainWindow" Design.Width="400" Design.Height="800"
+        Icon="/Assets/swaglyrics_pfp.ico" MinWidth="400" Width="400" Height="800"
+        Title="SwagLyricsGUI">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
+          <TextBlock VerticalAlignment="Center" Text="Theme: "/>
+          <ComboBox Name="themeSelector" Width="100" SelectedIndex="{Binding ThemeIndex, Mode=TwoWay}">
+            <ComboBoxItem>Light</ComboBoxItem>
+            <ComboBoxItem>Dark</ComboBoxItem>
+            <ComboBoxItem>SwagLyrics</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <Separator BorderThickness="0.2" BorderBrush="Gray" Margin="0,5,0,5"/>
+        <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -11,4 +11,9 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.9.11" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.11" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\Styles\SwagLyricsTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@ namespace SwagLyricsGUI.Models
 
             process.Start();
             process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
             Console.Read();
         }
 
@@ -35,29 +36,5 @@ namespace SwagLyricsGUI.Models
             if (e.Data?.ToLower() == "(press ctrl+c to quit)") return;
             MainWindowViewModel.Current.Lyrics += $"\n{e.Data}";
         }
-
-        //public async void OpenInterProcessCommunication()
-        //{
-        //    Process pipeClient = new Process();
-        //    pipeClient.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(),Path.Join("..","..","..","Models","ipc_bridge.py"));
-        //    pipeClient.Start();
-
-        //    using (var stream = new NamedPipeServerStream("SwagLyricsPipe", PipeDirection.InOut))
-        //    {
-        //        await stream.WaitForConnectionAsync();
-        //        using (StreamWriter writer = new StreamWriter(stream))
-        //        {
-        //            writer.AutoFlush = true;
-        //            await writer.WriteLineAsync("sync");
-        //            stream.WaitForPipeDrain();
-        //            Console.Write("Recieved: ");
-        //            await writer.WriteLineAsync(Console.ReadLine());
-        //        }
-        //    }
-
-        //    pipeClient.WaitForExit();
-        //    pipeClient.Close();
-        //}
-
     }
 }
