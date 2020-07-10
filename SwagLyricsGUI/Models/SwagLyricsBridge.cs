@@ -1,4 +1,5 @@
 ﻿using SwagLyricsGUI.ViewModels;
+using SwagLyricsGUI.Views;
 using System;
 using System.Diagnostics;
 
@@ -32,9 +33,17 @@ namespace SwagLyricsGUI.Models
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data != null && e.Data.StartsWith("Getting lyrics for")) MainWindowViewModel.Current.Lyrics = "";
-            if (e.Data?.ToLower() == "(press ctrl+c to quit)") return;
-            MainWindowViewModel.Current.Lyrics += $"\n{e.Data}";
+            if (e.Data == null) return;
+            if (e.Data.StartsWith("Getting lyrics for"))
+            {
+                MainWindowViewModel.Current.Lyrics = "";
+                MainWindowViewModel.Current.Song = e.Data.Split("for")[1].Replace(".", "");
+            }
+            else
+            {
+                if (string.Compare(e.Data, "(Press Ctrl+C to quit)", true) == 0) return;
+                MainWindowViewModel.Current.Lyrics += $"\n{e.Data}";
+            }
         }
     }
 }

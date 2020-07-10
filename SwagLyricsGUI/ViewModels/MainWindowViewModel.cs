@@ -37,6 +37,13 @@ namespace SwagLyricsGUI.ViewModels
             get => _lyrics;
             set => this.RaiseAndSetIfChanged(ref _lyrics, value);
         }
+
+        private string _song = "Nothing is playing";
+        public string Song
+        {
+            get => _song;
+            set => this.RaiseAndSetIfChanged(ref _song, value);
+        }
         private SwagLyricsBridge _bridge = new SwagLyricsBridge();
 
         public MainWindowViewModel()
