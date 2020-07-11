@@ -71,7 +71,7 @@ namespace SwagLyricsGUI.Models
             byte[] encodedDataAsBytes =
             System.Convert.FromBase64String(input);
             string returnValue =
-            System.Text.Encoding.UTF8.GetString(encodedDataAsBytes);
+            Encoding.UTF8.GetString(encodedDataAsBytes);
             return returnValue;
         }
 
