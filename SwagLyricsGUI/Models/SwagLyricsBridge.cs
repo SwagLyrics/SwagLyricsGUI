@@ -1,4 +1,6 @@
-﻿using SwagLyricsGUI.ViewModels;
+﻿using Avalonia;
+using Avalonia.Platform;
+using SwagLyricsGUI.ViewModels;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -8,11 +10,15 @@ namespace SwagLyricsGUI.Models
 {
     public class SwagLyricsBridge
     {
-        public event EventHandler OnNewSong;
-     
+        public event EventHandler<NewSongEventArgs> OnNewSong;
+        public event EventHandler<LyricsLoadedEventArgs> OnLyricsLoaded;
+        public event EventHandler<LyricsLoadedEventArgs> OnError;
+        public event EventHandler OnResumed;
+
         public void GetLyrics()
         {
-            var cmd = Path.Combine(Directory.GetCurrentDirectory(), Path.Join("..", "..", "..", "Models", "SwagLyrics_api_bridge.py"));
+            string path = Path.Combine(Directory.GetCurrentDirectory(), Path.Join("Bridge","SwagLyrics_api_bridge.py"));
+            var cmd = path;
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -37,10 +43,8 @@ namespace SwagLyricsGUI.Models
 
         private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if(e.Data != null)
-            {
-                MainWindowViewModel.Current.Lyrics = e.Data;
-            }
+            if (e.Data == null) return;
+            OnError?.Invoke(this, new LyricsLoadedEventArgs(e.Data));
         }
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -49,14 +53,17 @@ namespace SwagLyricsGUI.Models
             string data = DecodeFrom64(e.Data);
             if (data.EndsWith(':') && data.Contains("by"))
             {
-                MainWindowViewModel.Current.Song = data.Split(":")[0];
-                MainWindowViewModel.Current.Lyrics = "Loading lyrics...";
+                string song = data.Split(":")[0];
 
-                OnNewSong?.Invoke(this, EventArgs.Empty);
+                OnNewSong?.Invoke(this, new NewSongEventArgs(song));
+            }
+            else if(data == "Resumed")
+            {
+                OnResumed?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                MainWindowViewModel.Current.Lyrics = $"\n{data}\n"; // \n are "Margins"
+                OnLyricsLoaded?.Invoke(this, new LyricsLoadedEventArgs($"\n{data}\n")); // \n are "Margins"
             }
 
         }

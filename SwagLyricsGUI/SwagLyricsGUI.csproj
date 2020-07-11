@@ -15,5 +15,8 @@
     <None Update="Assets\Styles\SwagLyricsTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <None Update="Bridge\SwagLyrics_api_bridge.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

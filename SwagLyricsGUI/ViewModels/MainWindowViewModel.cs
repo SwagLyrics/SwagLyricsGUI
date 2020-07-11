@@ -2,6 +2,7 @@
 using ReactiveUI;
 using SwagLyricsGUI.Models;
 using SwagLyricsGUI.Views;
+using System.Threading.Tasks;
 
 namespace SwagLyricsGUI.ViewModels
 {
@@ -13,7 +14,7 @@ namespace SwagLyricsGUI.ViewModels
         {
             AutoReset = true,            
         };
-        private double _scrollSpeed = 1;
+        public double ScrollSpeed = 1.1;
         private double t = 0;
 
 
@@ -55,8 +56,6 @@ namespace SwagLyricsGUI.ViewModels
             set 
             { 
                 this.RaiseAndSetIfChanged(ref _lyrics, value);
-                if(AutoScroll)
-                    StartAutoScroll();
             }
         }
 
@@ -66,22 +65,51 @@ namespace SwagLyricsGUI.ViewModels
             get => _song;
             set => this.RaiseAndSetIfChanged(ref _song, value);
         }
-        private SwagLyricsBridge _bridge = new SwagLyricsBridge();
+        public SwagLyricsBridge Bridge = new SwagLyricsBridge();
 
         public MainWindowViewModel()
         {
             Current = this;
             ThemeManager = new ThemeManager();
             ThemeManager.LoadThemes();
-            _bridge.GetLyrics();
-            _bridge.OnNewSong += _bridge_OnNewSong;
+            Bridge.GetLyrics();
+            Bridge.OnNewSong += Bridge_OnNewSong;
+            Bridge.OnLyricsLoaded += Bridge_OnLyricsLoaded;
+            Bridge.OnError += Bridge_OnError;
+            Bridge.OnResumed += Bridge_OnResumed;
             _timer.Elapsed += _timer_Elapsed;
         }
 
-        private void _bridge_OnNewSong(object sender, System.EventArgs e)
+        private void Bridge_OnResumed(object sender, System.EventArgs e)
         {
+            _timer.Start();
+        }
+
+        private void Bridge_OnError(object sender, LyricsLoadedEventArgs e)
+        {
+            if (e.Lyrics == "SpotifyNotRunning")
+            {
+                _timer.Stop();
+            }
+            else
+            {
+                Lyrics = e.Lyrics;
+            }
+        }
+
+        private void Bridge_OnLyricsLoaded(object sender, LyricsLoadedEventArgs e)
+        {
+            Lyrics = e.Lyrics;
+            Task.Delay(20000).ContinueWith((task) => { _timer.Start(); });
+        }
+
+        private void Bridge_OnNewSong(object sender, NewSongEventArgs e)
+        {
+            Song = e.Song;
+            Lyrics = "Loading lyrics...";
             ScrollBarOffset = new Vector(0, 0);
             t = 0;
+            _timer.Stop();
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -90,16 +118,7 @@ namespace SwagLyricsGUI.ViewModels
             {
                 ScrollBarOffset = new Vector(0, MathEx.Lerp(0, MainWindow.Current.ScrollViewerVieportHeight, t));
             }
-            t += _scrollSpeed * 0.0001;
-        }
-
-        private void StartAutoScroll()
-        {
-            if (!_timer.Enabled)
-            {
-                _timer.Start();
-            }
-
+            t += ScrollSpeed * 0.0001;
         }
     }
 }
