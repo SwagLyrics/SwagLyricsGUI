@@ -1,8 +1,9 @@
-﻿from swaglyrics import cli
-from SwSpotify import spotify, SpotifyNotRunning
-import time
+﻿import time
 import sys
 import base64
+
+from swaglyrics import cli
+from SwSpotify import spotify, SpotifyNotRunning
 
 paused = False
 

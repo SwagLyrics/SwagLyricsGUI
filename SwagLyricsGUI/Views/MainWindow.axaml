@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         x:Class="SwagLyricsGUI.Views.MainWindow" Design.Width="400" Design.Height="800"
         Icon="/Assets/swaglyrics_pfp.ico" MinWidth="420" Width="420" MinHeight="400" Height="800"
-        Title="SwagLyricsGUI">
+        Title="SwagLyricsGUI" FontFamily="/Assets/Fonts/Roboto-Regular.ttf">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -29,8 +29,8 @@
     <Separator BorderThickness="0.2" BorderBrush="Gray" Margin="0,5,0,5"/>
     <ScrollViewer Name="scrollViewer" Offset="{Binding ScrollBarOffset}" Grid.Row="1" VerticalScrollBarVisibility="Auto">
       <StackPanel Orientation="Vertical">   
-        <TextBlock TextWrapping="Wrap" Text="{Binding Song}" Width="400" HorizontalAlignment="Left" Margin="15" FontSize="20"/>
-        <TextBlock FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Foreground="{DynamicResource ThemeAccentBrush}" TextWrapping="Wrap" Text="{Binding Song}" Width="400" HorizontalAlignment="Left" Margin="15" FontSize="20"/>
+        <TextBlock FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       </StackPanel>
     </ScrollViewer>
   </Grid>

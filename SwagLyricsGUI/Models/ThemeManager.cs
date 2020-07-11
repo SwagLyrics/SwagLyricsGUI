@@ -1,10 +1,14 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
+using SwagLyricsGUI.ViewModels;
 using SwagLyricsGUI.Views;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Configuration;
+using System.IO;
+using System.Net;
+
 
 namespace SwagLyricsGUI.Models
 {

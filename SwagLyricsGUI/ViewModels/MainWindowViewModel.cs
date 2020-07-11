@@ -2,6 +2,7 @@
 using ReactiveUI;
 using SwagLyricsGUI.Models;
 using SwagLyricsGUI.Views;
+using System.Configuration;
 using System.Threading.Tasks;
 
 namespace SwagLyricsGUI.ViewModels
@@ -26,6 +27,8 @@ namespace SwagLyricsGUI.ViewModels
             {
                 this.RaiseAndSetIfChanged(ref _themeIndex, value);
                 ThemeManager.ChangeTheme(value);
+                Config.AppSettings.Settings["Theme"].Value = $"{value}";
+                Config.Save();
             }
         }
 
@@ -66,6 +69,7 @@ namespace SwagLyricsGUI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _song, value);
         }
         public SwagLyricsBridge Bridge = new SwagLyricsBridge();
+        public Configuration Config;
 
         public MainWindowViewModel()
         {
@@ -78,6 +82,12 @@ namespace SwagLyricsGUI.ViewModels
             Bridge.OnError += Bridge_OnError;
             Bridge.OnResumed += Bridge_OnResumed;
             _timer.Elapsed += _timer_Elapsed;
+
+            Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            if (Config.AppSettings.Settings["Theme"]?.Value is string theme)
+            {
+                ThemeIndex = int.Parse(theme);
+            }
         }
 
         private void Bridge_OnResumed(object sender, System.EventArgs e)
