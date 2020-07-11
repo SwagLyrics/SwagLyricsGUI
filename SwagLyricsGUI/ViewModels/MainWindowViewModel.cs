@@ -70,23 +70,34 @@ namespace SwagLyricsGUI.ViewModels
         }
         public SwagLyricsBridge Bridge = new SwagLyricsBridge();
         public Configuration Config;
+        PrerequisitesChecker checker = new PrerequisitesChecker();
 
         public MainWindowViewModel()
         {
-            Current = this;
-            ThemeManager = new ThemeManager();
-            ThemeManager.LoadThemes();
-            Bridge.GetLyrics();
-            Bridge.OnNewSong += Bridge_OnNewSong;
-            Bridge.OnLyricsLoaded += Bridge_OnLyricsLoaded;
-            Bridge.OnError += Bridge_OnError;
-            Bridge.OnResumed += Bridge_OnResumed;
-            _timer.Elapsed += _timer_Elapsed;
-
-            Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            if (Config.AppSettings.Settings["Theme"]?.Value is string theme)
+            bool pythonInstalled = checker.SupportedPythonVersionInstalled();
+            if (pythonInstalled)
             {
-                ThemeIndex = int.Parse(theme);
+                checker.InstallSwagLyricsIfMissing();
+                Current = this;
+                ThemeManager = new ThemeManager();
+                ThemeManager.LoadThemes();
+                Bridge.GetLyrics();
+                Bridge.OnNewSong += Bridge_OnNewSong;
+                Bridge.OnLyricsLoaded += Bridge_OnLyricsLoaded;
+                Bridge.OnError += Bridge_OnError;
+                Bridge.OnResumed += Bridge_OnResumed;
+                _timer.Elapsed += _timer_Elapsed;
+
+                Config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                if (Config.AppSettings.Settings["Theme"]?.Value is string theme)
+                {
+                    ThemeIndex = int.Parse(theme);
+                }
+            }
+            else
+            {
+                Song = "Unsupported Python Version!";
+                Lyrics = "Minimal supported version is Python 3.6.\nDownload at " + @"https://www.python.org/downloads/";
             }
         }
 

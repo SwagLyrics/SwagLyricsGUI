@@ -1,7 +1,4 @@
-﻿using Avalonia;
-using Avalonia.Platform;
-using SwagLyricsGUI.ViewModels;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -18,13 +15,12 @@ namespace SwagLyricsGUI.Models
         public void GetLyrics()
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), Path.Join("Bridge","SwagLyrics_api_bridge.py"));
-            var cmd = path;
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "python",
-                    Arguments = cmd,
+                    FileName = $"python{PrerequisitesChecker.PythonCmdPostFix}",
+                    Arguments = path,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

@@ -30,7 +30,7 @@
     <ScrollViewer Name="scrollViewer" Offset="{Binding ScrollBarOffset}" Grid.Row="1" VerticalScrollBarVisibility="Auto">
       <StackPanel Orientation="Vertical">   
         <TextBlock Foreground="{DynamicResource ThemeAccentBrush}" TextWrapping="Wrap" Text="{Binding Song}" Width="400" HorizontalAlignment="Left" Margin="15" FontSize="20"/>
-        <TextBlock FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox BorderThickness="0" IsReadOnly="True" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
       </StackPanel>
     </ScrollViewer>
   </Grid>
