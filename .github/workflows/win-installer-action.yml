@@ -34,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release $ {{ github.ref }}
+        release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
     - name: Upload a Release Asset
@@ -46,7 +46,7 @@ jobs:
           # The URL for uploading assets to the release
         upload_url: ${{ steps.create_release.outputs.upload_url }}
           # The path to the asset you want to upload
-        asset_path: .\Installer\win-x64\*.exe
+        asset_path: Installer\win-x64\SwagLyricsGUI-setup-x64.exe
           # The name of the asset you want to upload
         asset_name: SwagLyricsGUI-setup-x64.exe
           # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
