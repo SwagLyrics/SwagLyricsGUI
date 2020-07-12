@@ -1,0 +1,1 @@
+& "$env:userprofile\.nuget\packages\tools.innosetup\6.0.5\tools\ISCC.exe" setup_script_win_x64.iss
