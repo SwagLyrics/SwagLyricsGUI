@@ -30,3 +30,10 @@ jobs:
     - name: Compile setup script
       shell: powershell
       run: .\inno_compile.ps1
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        # Artifact name
+        name: SwagLyrics-windows-x64-setup
+        # A file, directory or wildcard pattern that describes what to upload
+        path: Installer\win-x64\*.exe
