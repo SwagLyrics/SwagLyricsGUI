@@ -4,7 +4,6 @@ on:
   push:
     branches: 
       - master
-      - actions-playground-1
   pull_request:
     branches: [ master ]
 
@@ -25,5 +24,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-    - name: Set Inno path
-      run: SET PATH=packages\Tools.InnoSetup.*\tools
+    - name: Publish x64 release
+      run: dotnet publish SwagLyricsGUI --self-contained true -p:PublishTrimmed=true -o Builds\win-x64\ -r win-x64 -c Release
+    - name: Compile setup script
+      shell: powershell
+      run: & "$env:userprofile\.nuget\packages\tools.innosetup\6.0.5\tools\ISCC.exe" setup_script_win_x64.iss "$env:userprofile\.nuget\packages\tools.innosetup\6.0.5\tools\ISCC.exe" setup_script_win_x64.iss
