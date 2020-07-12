@@ -9,6 +9,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Assets\Fonts\Roboto-Regular.ttf" />
+    <None Remove="Bridge\SwagLyrics_api_bridge.py" />
+    <None Remove="Bridge\swaglyrics_installer.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Bridge\swaglyrics_api_bridge.py">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Bridge\swaglyrics_installer.py">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.11" />
@@ -19,12 +29,6 @@
   <ItemGroup>
     <None Update="Assets\Styles\SwagLyricsTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Bridge\SwagLyrics_api_bridge.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Bridge\swaglyrics_installer.py">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="app.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
