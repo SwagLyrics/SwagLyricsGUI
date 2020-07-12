@@ -28,4 +28,4 @@ jobs:
       run: dotnet publish SwagLyricsGUI --self-contained true -p:PublishTrimmed=true -o Builds\win-x64\ -r win-x64 -c Release
     - name: Compile setup script
       shell: powershell
-      run: & "$env:userprofile\.nuget\packages\tools.innosetup\6.0.5\tools\ISCC.exe" setup_script_win_x64.iss "$env:userprofile\.nuget\packages\tools.innosetup\6.0.5\tools\ISCC.exe" setup_script_win_x64.iss
+      run: inno_compile.ps1
