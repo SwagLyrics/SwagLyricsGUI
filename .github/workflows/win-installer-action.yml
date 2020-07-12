@@ -1,14 +1,11 @@
-name: .NET Core
+name: Build Release Asset - Windows x64
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
@@ -28,13 +25,22 @@ jobs:
     - name: Compile setup script
       shell: powershell
       run: .\inno_compile.ps1
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release $ {{ github.ref }}
+        draft: false
+        prerelease: false
     - name: Upload a Release Asset
+      id: upload-release-asset
       uses: actions/upload-release-asset@v1.0.2
       with:
           # The URL for uploading assets to the release
-        upload_url: https://github.com/SwagLyrics/SwagLyricsGUI/releases/tag/continous
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
           # The path to the asset you want to upload
-        asset_path: Installer\win-x64\*.exe
+        asset_path: .\Installer\win-x64\*.exe
           # The name of the asset you want to upload
         asset_name: SwagLyricsGUI-setup-x64.exe
           # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
