@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64</RuntimeIdentifiers>
     <ApplicationIcon>swaglyrics_pfp.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>

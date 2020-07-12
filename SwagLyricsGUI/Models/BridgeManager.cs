@@ -33,7 +33,7 @@ namespace SwagLyricsGUI.Models
 
         private void LoadEmbeddedScript(string scriptName)
         {
-            if (!File.Exists(Path.Join(BridgeFilesPath, scriptName))) return;
+            if (File.Exists(Path.Join(BridgeFilesPath, scriptName))) return;
 
                 string resourceName = ExecutingAssembly.GetManifestResourceNames()
             .Single(str => str.EndsWith(scriptName));
