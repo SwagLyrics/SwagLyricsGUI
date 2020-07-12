@@ -1,0 +1,41 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Publish x64 release
+      run: dotnet publish SwagLyricsGUI --self-contained true -p:PublishTrimmed=true -o Builds\win-x64\ -r win-x64 -c Release
+    - name: Compile setup script
+      shell: powershell
+      run: .\inno_compile.ps1
+    - name: Upload a Release Asset
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+          # The URL for uploading assets to the release
+        upload_url: https://github.com/SwagLyrics/SwagLyricsGUI/releases/tag/continous
+          # The path to the asset you want to upload
+        asset_path: Installer\win-x64\*.exe
+          # The name of the asset you want to upload
+        asset_name: SwagLyricsGUI-setup-x64.exe
+          # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
+        asset_content_type: application
