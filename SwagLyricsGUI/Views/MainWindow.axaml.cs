@@ -1,11 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Markup.Xaml.Styling;
-using Avalonia.Styling;
-using SwagLyricsGUI.ViewModels;
-using System;
-using System.Collections.Generic;
 
 namespace SwagLyricsGUI.Views
 {
@@ -22,6 +17,8 @@ namespace SwagLyricsGUI.Views
             this.AttachDevTools();
 #endif
             sv = this.Find<ScrollViewer>("scrollViewer");
+            MaxHeight = Screens.Primary.WorkingArea.Height;
+            Height = Screens.Primary.WorkingArea.Height - 40;
         }
 
         private void InitializeComponent()
