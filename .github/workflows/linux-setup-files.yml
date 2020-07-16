@@ -46,8 +46,7 @@ jobs:
         prerelease: false
     - name: Set Assets url
       if: ${{ env.RELEASE_VER != env.LATEST_TAG }}
-      env: 
-          UPLOAD_URL: ${{ steps.create_release.outputs.upload_url }}
+      run: echo "::set-env name=UPLOAD_URL::${{ steps.create_release.outputs.upload_url }}"
     - name: Get the upload URL for a release
       if: ${{ env.RELEASE_VER == env.LATEST_TAG }}
       run: echo ::set-env name=UPLOAD_URL::$(curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest | jq '.upload_url' | tr -d \")
