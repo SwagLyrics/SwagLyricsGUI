@@ -29,14 +29,14 @@ jobs:
       run: ./build_linux_assets.sh
     - name: Set version env
       run: echo ::set-env name=RELEASE_VER::$(cat version.txt)
+    - name: Install jq
+      run: apt-get install jq
     - name: Check if release exist
-      run: echo ::set-env name=TAG_NOT_EXIST::$(if git show-ref | egrep -q "refs/tags/$(cat version.txt)"; then echo "false"; else echo "true"; fi)
-    - name: test
-      run: echo ${{ github.ref }}
+      run: echo ::set-env name=LATEST_TAG::$(curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest | jq '.tag_name' | tr -d \")
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
-      if: ${{ env.TAG_NOT_EXIST }}
+      if: ${{ env.RELEASE_VER != env.LATEST_TAG }}
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
