@@ -20,7 +20,7 @@ jobs:
             - 'version.txt'
 
     - name: Cancel workflow
-      if: steps.filter.outputs.version == 'true'
+      if: steps.filter.outputs.version == 'false'
       uses: andymckay/cancel-action@0.2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
