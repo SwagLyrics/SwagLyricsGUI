@@ -1,0 +1,8 @@
+# Desktop Entry Specification: https://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
+[Desktop Entry]
+Type=Application
+Name=SwagLyricsGUI
+Comment=Automatic lyrics fetcher for current spotify songs.
+Icon=swaglyrics_pfp
+Exec=SwagLyricsGUI
+Categories=Audio;

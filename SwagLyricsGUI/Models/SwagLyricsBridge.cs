@@ -14,7 +14,7 @@ namespace SwagLyricsGUI.Models
 
         public void GetLyrics()
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), Path.Join("Bridge","SwagLyrics_api_bridge.py"));
+            string path = Path.Join(BridgeManager.BridgeFilesPath, "swaglyrics_api_bridge.py");
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo

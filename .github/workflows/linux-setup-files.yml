@@ -1,0 +1,63 @@
+name: Build Release Asset - Linux x64 
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Publish Release
+      run: dotnet publish SwagLyricsGUI --self-contained true -p:PublishTrimmed=true -p:PublishSingleFile=true -o Builds/linux-x64/ -r linux-x64 -c Release
+    - name: Build executables
+      run: ./build_linux_assets.sh
+    - name: Set version env
+      run: echo ::set-env name=RELEASE_VER::$(cat version.txt)
+    - name: Install jq
+      run: sudo apt-get install jq
+    - name: Check if release exist
+      run: echo ::set-env name=LATEST_TAG::$(curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest | jq '.tag_name' | tr -d \")
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      if: ${{ env.RELEASE_VER != env.LATEST_TAG }}
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.RELEASE_VER }}
+        release_name: Release ${{ env.RELEASE_VER }}
+        draft: false
+        prerelease: false
+    - name: Get the upload URL for a release
+      run: echo ::set-env name=UPLOAD_URL::$(curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest | jq '.upload_url' | tr -d \")
+    - name: Upload a Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          # The URL for uploading assets to the release
+        upload_url: ${{ env.UPLOAD_URL }}
+          # The path to the asset you want to upload
+        asset_path: OutputFiles/SwagLyricsGUI-x86_64.AppImage
+          # The name of the asset you want to upload
+        asset_name: SwagLyricsGUI-x86_64.AppImage
+          # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
+        asset_content_type: application
+    

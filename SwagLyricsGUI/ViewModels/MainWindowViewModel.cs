@@ -73,12 +73,15 @@ namespace SwagLyricsGUI.ViewModels
         public SwagLyricsBridge Bridge = new SwagLyricsBridge();
         public Configuration Config;
         PrerequisitesChecker checker = new PrerequisitesChecker();
+        public BridgeManager Manager = new BridgeManager();
 
         public MainWindowViewModel()
         {
             bool pythonInstalled = checker.SupportedPythonVersionInstalled();
             if (pythonInstalled)
             {
+                Manager.InitTempDirectory();
+                Manager.LoadEmbeddedScriptsToTempFolder();
                 checker.InstallSwagLyricsIfMissing();
                 Current = this;
                 ThemeManager = new ThemeManager();

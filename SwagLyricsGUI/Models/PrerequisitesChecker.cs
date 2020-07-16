@@ -16,7 +16,7 @@ namespace SwagLyricsGUI.Models
 
         public void InstallSwagLyricsIfMissing()
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), Path.Join("Bridge", "swaglyrics_installer.py"));
+            string path = Path.Join(BridgeManager.BridgeFilesPath, "swaglyrics_installer.py");
             ProcessStartInfo start = new ProcessStartInfo
             {
                 FileName = $"python{PythonCmdPostFix}",
