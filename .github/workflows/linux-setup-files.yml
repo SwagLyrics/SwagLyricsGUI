@@ -32,11 +32,11 @@ jobs:
     - name: Set release URL
       run: echo ::set-env name=RELEASE_URL::https://github.com/SwagLyrics/SwagLyricsGUI/releases/tag/$(cat version.txt)
     - name: Check if release exist
-      run: echo ::set-env name=TAG_EXISTS::$(if git show-ref | egrep -q "refs/tags/$(cat version.txt)"; then echo "true"; else echo "false"; fi)
+      run: echo ::set-env name=TAG_NOT_EXIST::$(if git show-ref | egrep -q "refs/tags/$(cat version.txt)"; then echo "false"; else echo "true"; fi)
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
-      if: ${{ !env.TAG_EXISTS }}
+      if: ${{ env.TAG_NOT_EXIST }}
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
