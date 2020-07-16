@@ -2,6 +2,9 @@ name: Build Release Asset - Windows x64
 
 on:
   push:
+    paths-ignore:
+    - 'README.md'
+    - 'LICENSE.md'
     branches: [ master ]
     tags: 
       - 'v*'
