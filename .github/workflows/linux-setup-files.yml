@@ -29,8 +29,6 @@ jobs:
       run: ./build_linux_assets.sh
     - name: Set version env
       run: echo ::set-env name=RELEASE_VER::$(cat version.txt)
-    - name: Install jq
-      run: sudo apt-get install jq
     - name: Check if release exist
       run: echo ::set-env name=LATEST_TAG::$(curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest | jq '.tag_name' | tr -d \")
     - name: Create Release

@@ -45,7 +45,7 @@ jobs:
         prerelease: false
     - name: Set Assets url
       if: ${{ env.RELEASE_VER != env.LATEST_TAG }}
-      run: echo "::set-env name=UPLOAD_URL::$steps.create_release.outputs.upload_url"
+      run: echo "::set-env name=UPLOAD_URL::${{ steps.create_release.outputs.upload_url }}"
     - name: Get release URL
       id: release_url
       shell: powershell
