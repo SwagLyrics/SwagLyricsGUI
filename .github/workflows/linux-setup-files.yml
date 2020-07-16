@@ -3,6 +3,8 @@ name: Build Release Asset - Linux x64
 on:
   push:
     branches: [ master, setup-linux-assets ]
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -27,9 +29,14 @@ jobs:
       run: ./build_linux_assets.sh
     - name: Set version env
       run: echo ::set-env name=RELEASE_VER::$(cat version.txt)
+    - name: Set release URL
+      run: echo ::set-env name=RELEASE_URL::https://github.com/SwagLyrics/SwagLyricsGUI/releases/tag/$(cat version.txt)
+    - name: Check if release exist
+      run: echo ::set-env name=TAG_EXISTS::$(if git show-ref | egrep -q "refs/tags/$(cat version.txt)"; then echo "true"; else echo "false"; fi)
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
+      if: ${{ !env.TAG_EXISTS }}
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -44,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           # The URL for uploading assets to the release
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ env.RELEASE_URL }}
           # The path to the asset you want to upload
         asset_path: OutputFiles/linux-x64/SwagLyricsGUI-x86_64.AppImage
           # The name of the asset you want to upload
