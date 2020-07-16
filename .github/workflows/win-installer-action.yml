@@ -27,16 +27,30 @@ jobs:
     - name: Compile setup script
       shell: powershell
       run: .\inno_compile.ps1
+    - name: Set version env
+      run: echo ::set-env name=RELEASE_VER::$(cat version.txt)
+    - name: Check if release exist
+      shell: powershell
+      run: echo ::set-env name=LATEST_TAG::$($WebResponse = curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest; $WebResponse.Content | ConvertFrom-Json | Select tag_name | foreach {$_.tag_name})
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
+      if: ${{ env.RELEASE_VER != env.LATEST_TAG }}
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ env.RELEASE_VER }}
+        release_name: Release ${{ env.RELEASE_VER }}
         draft: false
         prerelease: false
+    - name: Set Assets url
+      if: ${{ env.RELEASE_VER != env.LATEST_TAG }}
+      run: echo "::set-env name=UPLOAD_URL::${{ steps.create_release.outputs.upload_url }}"
+    - name: Get release URL
+      id: release_url
+      shell: powershell
+      if: ${{ env.RELEASE_VER == env.LATEST_TAG }}
+      run: echo "::set-env name=UPLOAD_URL::$($WebResponse = curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest; $WebResponse.Content | ConvertFrom-Json | Select upload_url | foreach {$_.upload_url})"
     - name: Upload a Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1.0.2
@@ -44,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           # The URL for uploading assets to the release
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        upload_url: ${{ env.UPLOAD_URL }}
           # The path to the asset you want to upload
         asset_path: Installer\win-x64\SwagLyricsGUI-setup-x64.exe
           # The name of the asset you want to upload
