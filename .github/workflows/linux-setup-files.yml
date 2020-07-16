@@ -51,7 +51,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           # The URL for uploading assets to the release
-        upload_url: https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest
+        upload_url: https://github.com/SwagLyrics/SwagLyricsGUI/releases/latest
           # The path to the asset you want to upload
         asset_path: OutputFiles/SwagLyricsGUI-x86_64.AppImage
           # The name of the asset you want to upload
