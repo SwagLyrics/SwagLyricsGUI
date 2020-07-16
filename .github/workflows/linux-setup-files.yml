@@ -16,8 +16,8 @@ jobs:
     - uses: dorny/paths-filter@v2.2.0
       id: filter
       with: 
-          filters: 
-            version:
+        filters: |
+          version:
             - 'version.txt'
 
     - name: Setup .NET Core
