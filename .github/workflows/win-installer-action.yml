@@ -2,7 +2,7 @@ name: Build Release Asset - Windows x64
 
 on:
   push:
-    branches: [ master, setup-linux-assets]
+    branches: [ master ]
     tags: 
       - 'v*'
 
