@@ -30,6 +30,7 @@ jobs:
     - name: Set version env
       run: echo ::set-env name=RELEASE_VER::$(cat version.txt)
     - name: Check if release exist
+      shell: powershell
       run: echo ::set-env name=LATEST_TAG::$($WebResponse = curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest; $WebResponse.Content | ConvertFrom-Json | Select tag_name | foreach {$_.tag_name})
     - name: Create Release
       id: create_release
@@ -43,6 +44,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Get release URL
+      shell: powershell
       run: echo ::set-env name=UPLOAD_URL::$($WebResponse = curl https://api.github.com/repos/SwagLyrics/SwagLyricsGUI/releases/latest; $WebResponse.Content | ConvertFrom-Json | Select upload_url | foreach {$_.upload_url})
     - name: Upload a Release Asset
       id: upload-release-asset
