@@ -2,9 +2,6 @@ name: Build Release Asset - Windows x64
 
 on:
   push:
-    paths-ignore:
-    - 'README.md'
-    - 'LICENSE.md'
     branches: [ master ]
     tags: 
       - 'v*'
@@ -15,7 +12,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2.2.0
+      id: filter
+      with: 
+          filters: 
+            version:
+            - 'version.txt'
     - name: Setup .NET Core
+      if: steps.filter.outputs.version == 'true'
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
