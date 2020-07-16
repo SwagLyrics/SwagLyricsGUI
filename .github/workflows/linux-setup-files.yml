@@ -53,7 +53,7 @@ jobs:
           # The URL for uploading assets to the release
         upload_url: ${{ env.RELEASE_URL }}
           # The path to the asset you want to upload
-        asset_path: OutputFiles/linux-x64/SwagLyricsGUI-x86_64.AppImage
+        asset_path: OutputFiles/SwagLyricsGUI-x86_64.AppImage
           # The name of the asset you want to upload
         asset_name: SwagLyricsGUI-x86_64.AppImage
           # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
