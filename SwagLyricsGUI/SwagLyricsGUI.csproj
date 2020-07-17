@@ -4,6 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64</RuntimeIdentifiers>
     <ApplicationIcon>swaglyrics_pfp.ico</ApplicationIcon>
+    <Version>0.0.2</Version>
+    <Authors>Krzysztof Krysiński</Authors>
+    <Company>SwagLyrics</Company>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/SwagLyrics/SwagLyricsGUI</RepositoryUrl>
+    <Description>A cross-platform, real-time lyrics fetching application.</Description>
+    <Copyright>Krzysztof Krysiński © 2020</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="**\*.xaml.cs">
@@ -18,6 +25,10 @@
     <None Remove="Assets\Fonts\Roboto-Regular.ttf" />
     <None Remove="Bridge\SwagLyrics_api_bridge.py" />
     <None Remove="Bridge\swaglyrics_installer.py" />
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Bridge\swaglyrics_api_bridge.py">

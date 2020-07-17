@@ -21,7 +21,7 @@ namespace SwagLyricsGUI.Models
             {
                 FileName = $"python{PythonCmdPostFix}",
                 Arguments = path,
-                UseShellExecute = false
+                UseShellExecute = false,
             };
             Process process = new Process() { StartInfo = start };
             process.Start();

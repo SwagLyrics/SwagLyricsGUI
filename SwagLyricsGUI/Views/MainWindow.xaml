@@ -7,7 +7,7 @@
         x:Class="SwagLyricsGUI.Views.MainWindow" Design.Width="400" Design.Height="800"
         Icon="/Assets/swaglyrics_pfp.ico" MinWidth="420" Width="420" MinHeight="400"
         Title="SwagLyricsGUI" FontFamily="/Assets/Fonts/Roboto-Regular.ttf" Topmost="True" 
-        WindowStartupLocation="CenterScreen" >
+        WindowStartupLocation="Manual" >
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
