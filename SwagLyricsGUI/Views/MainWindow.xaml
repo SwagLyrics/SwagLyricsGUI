@@ -2,12 +2,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:SwagLyricsGUI.ViewModels;assembly=SwagLyricsGUI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Name="mainWindow"
         x:Class="SwagLyricsGUI.Views.MainWindow" Design.Width="400" Design.Height="800"
-        Icon="/Assets/swaglyrics_pfp.ico" MinWidth="420" Width="420" MinHeight="400"
-        Title="SwagLyricsGUI" FontFamily="/Assets/Fonts/Roboto-Regular.ttf" Topmost="True" 
+        Icon="/Assets/swaglyrics_pfp.ico" MinWidth="420" Width="420" MinHeight="250"
+        Title="SwagLyricsGUI" FontFamily="/Assets/Fonts/Roboto-Regular.ttf" Topmost="True"
         WindowStartupLocation="Manual" >
+
+  <i:Interaction.Behaviors>
+    <ia:EventTriggerBehavior EventName="Closing" SourceObject="{Binding #mainWindow}">
+      <ia:InvokeCommandAction Command="{Binding CloseAppCommand}"/>
+    </ia:EventTriggerBehavior>
+  </i:Interaction.Behaviors>
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -30,8 +38,8 @@
     <Separator BorderThickness="0.2" BorderBrush="Gray" Margin="0,5,0,5"/>
     <ScrollViewer Name="scrollViewer" Offset="{Binding ScrollBarOffset}" Grid.Row="1" VerticalScrollBarVisibility="Auto">
       <StackPanel Orientation="Vertical" Width="400">   
-        <TextBlock Foreground="{DynamicResource ThemeAccentBrush}" TextWrapping="Wrap" Text="{Binding Song}" Width="400" HorizontalAlignment="Left" Margin="15" FontSize="20"/>
-        <TextBox Margin="20,0,0,0" AcceptsReturn="True" Name="lyricsText" BorderThickness="0" CaretBrush="Transparent" IsReadOnly="True" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <TextBlock Foreground="{DynamicResource ThemeAccentBrush}" TextWrapping="Wrap" Text="{Binding Song}" Width="385" HorizontalAlignment="Left" Margin="20" FontSize="20"/>
+        <TextBox Margin="15,0,0,0" AcceptsReturn="True" Name="lyricsText" BorderThickness="0" CaretBrush="Transparent" IsReadOnly="True" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="{Binding LyricsAlignment}" VerticalAlignment="Top"/>
       </StackPanel>
     </ScrollViewer>
   </Grid>

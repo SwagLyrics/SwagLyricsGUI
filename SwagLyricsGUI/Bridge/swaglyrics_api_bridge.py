@@ -1,6 +1,8 @@
 ﻿import time
 import sys
 import base64
+import os
+import tempfile
 
 from swaglyrics import cli
 from SwSpotify import spotify, SpotifyNotRunning
@@ -38,4 +40,6 @@ while True:
             paused = False
         elif paused:
             print_encoded("Resumed")
+    if not os.path.exists(os.path.join(tempfile.gettempdir(), "SwagLyricsGUI", "swaglyricsGUIOn.txt")): # kills the process if GUI is off and not closed it properly
+        sys.exit()
     time.sleep(2)

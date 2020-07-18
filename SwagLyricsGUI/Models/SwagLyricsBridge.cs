@@ -11,11 +11,18 @@ namespace SwagLyricsGUI.Models
         public event EventHandler<LyricsLoadedEventArgs> OnLyricsLoaded;
         public event EventHandler<LyricsLoadedEventArgs> OnError;
         public event EventHandler OnResumed;
+        public event EventHandler OnAdvertisement;
 
-        public void GetLyrics()
+        public string BridgeFileOnPath = Path.Join(BridgeManager.BridgeFilesPath, "swaglyricsGUIOn.txt");
+
+        public bool IsAdvertisement { get; private set; } = false;
+        public Process LyricsProcess { get; set; }
+
+        public void StartLyricsBridge()
         {
+            File.Create(BridgeFileOnPath);
             string path = Path.Join(BridgeManager.BridgeFilesPath, "swaglyrics_api_bridge.py");
-            var process = new Process
+            LyricsProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -24,16 +31,16 @@ namespace SwagLyricsGUI.Models
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    CreateNoWindow = true,
+                    CreateNoWindow = true,        
                 },
                 EnableRaisingEvents = true
             };
-            process.OutputDataReceived += Process_OutputDataReceived;
-            process.ErrorDataReceived += Process_ErrorDataReceived;
+            LyricsProcess.OutputDataReceived += Process_OutputDataReceived;
+            LyricsProcess.ErrorDataReceived += Process_ErrorDataReceived;
 
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
+            LyricsProcess.Start();
+            LyricsProcess.BeginOutputReadLine();
+            LyricsProcess.BeginErrorReadLine();
             Console.Read();
         }
 
@@ -51,13 +58,22 @@ namespace SwagLyricsGUI.Models
             {
                 string song = data.Split(":")[0];
 
-                OnNewSong?.Invoke(this, new NewSongEventArgs(song));
+                if(song.Split("by")[0].Trim() == "Advertisement")
+                {
+                    IsAdvertisement = true;
+                    OnAdvertisement?.Invoke(this, EventArgs.Empty);
+                }
+                else 
+                {
+                    IsAdvertisement = false;
+                    OnNewSong?.Invoke(this, new NewSongEventArgs(song));
+                }
             }
             else if(data == "Resumed")
             {
                 OnResumed?.Invoke(this, EventArgs.Empty);
             }
-            else
+            else if(!IsAdvertisement)
             {
                 OnLyricsLoaded?.Invoke(this, new LyricsLoadedEventArgs($"\n{data}\n")); // \n are "Margins"
             }
