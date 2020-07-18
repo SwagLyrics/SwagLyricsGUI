@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Serilog.Parsing;
 
 namespace SwagLyricsGUI.Views
 {
@@ -17,7 +18,6 @@ namespace SwagLyricsGUI.Views
             this.AttachDevTools();
 #endif
             sv = this.Find<ScrollViewer>("scrollViewer");
-            
             MaxHeight = Screens.Primary.Bounds.Height;
             Height = Screens.Primary.WorkingArea.Height - 80;
             Position = new PixelPoint(Screens.Primary.Bounds.Right - (int)Width - 15, 0);

@@ -5,6 +5,7 @@ using SwagLyricsGUI.Views;
 using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -21,11 +22,17 @@ namespace SwagLyricsGUI.ViewModels
         {
             AutoReset = true,            
         };
+        System.Timers.Timer _loadingTimer = new System.Timers.Timer(200)
+        {
+            AutoReset = true,
+        };
+        public char[] LoadingASCII;
+        private int _lastLoadingIndex = 0;
         public double ScrollSpeed = 1.1;
         private double t = 0;
 
 
-        private int _themeIndex = 1;
+        private int _themeIndex = 2;
         public int ThemeIndex
         {
             get => _themeIndex;
@@ -48,6 +55,13 @@ namespace SwagLyricsGUI.ViewModels
                 _autoScroll = value;
                 this.RaisePropertyChanged("AutoScroll");
             }
+        }
+
+        private Avalonia.Layout.HorizontalAlignment _lyricsAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+        public Avalonia.Layout.HorizontalAlignment LyricsAlignment
+        {
+            get => _lyricsAlignment;
+            set => this.RaiseAndSetIfChanged(ref _lyricsAlignment, value);
         }
 
         private Vector _scrollBarOffset;
@@ -92,12 +106,15 @@ namespace SwagLyricsGUI.ViewModels
                 Current = this;
                 ThemeManager = new ThemeManager();
                 ThemeManager.LoadThemes();
-                Bridge.GetLyrics();
+                Bridge.StartLyricsBridge();
                 Bridge.OnNewSong += Bridge_OnNewSong;
                 Bridge.OnLyricsLoaded += Bridge_OnLyricsLoaded;
                 Bridge.OnError += Bridge_OnError;
                 Bridge.OnResumed += Bridge_OnResumed;
+                Bridge.OnAdvertisement += Bridge_OnAdvertisement;
                 _timer.Elapsed += _timer_Elapsed;
+                _loadingTimer.Elapsed += _loadingTimer_Elapsed;
+                LoadingASCII = "|/-\\".ToCharArray();
 
                 Config = ConfigurationManager.OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
                 if (Config.AppSettings.Settings["Theme"]?.Value is string theme)
@@ -112,9 +129,33 @@ namespace SwagLyricsGUI.ViewModels
             }
         }
 
+        private void Bridge_OnAdvertisement(object sender, EventArgs e)
+        {
+            System.Timers.Timer factTimer = new System.Timers.Timer(15000)
+            {
+                AutoReset = true
+            };            
+            Song = "Advertisement time. Catch some fun facts";
+            Lyrics = RandomFactsFetcher.GetRandomFact().ToString();
+            factTimer.Elapsed += (s, e) =>
+            {
+                if (!Bridge.IsAdvertisement) { factTimer.Stop(); }
+                else { Lyrics = RandomFactsFetcher.GetRandomFact().ToString(); }
+            };
+            factTimer.Start();
+        }
+
+        private void _loadingTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Lyrics = LoadingASCII[_lastLoadingIndex].ToString();
+            if (_lastLoadingIndex == LoadingASCII.Length - 1) _lastLoadingIndex = -1;
+            _lastLoadingIndex++;
+        }
+
         private void OnClose(object obj)
         {
             Bridge?.LyricsProcess.Kill(true);
+            File.Delete(Bridge.BridgeFileOnPath);
         }
 
         private void Bridge_OnResumed(object sender, System.EventArgs e)
@@ -136,14 +177,17 @@ namespace SwagLyricsGUI.ViewModels
 
         private void Bridge_OnLyricsLoaded(object sender, LyricsLoadedEventArgs e)
         {
+            LyricsAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            _loadingTimer.Stop();
             Lyrics = e.Lyrics;
             Task.Delay(20000).ContinueWith((task) => { _timer.Start(); });
         }
 
         private void Bridge_OnNewSong(object sender, NewSongEventArgs e)
         {
+            LyricsAlignment = Avalonia.Layout.HorizontalAlignment.Center;
             Song = e.Song;
-            Lyrics = "Loading lyrics...";
+            _loadingTimer.Start();
             ScrollBarOffset = new Vector(0, 0);
             t = 0;
             _timer.Stop();

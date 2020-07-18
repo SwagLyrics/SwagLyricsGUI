@@ -11,10 +11,16 @@ namespace SwagLyricsGUI.Models
         public event EventHandler<LyricsLoadedEventArgs> OnLyricsLoaded;
         public event EventHandler<LyricsLoadedEventArgs> OnError;
         public event EventHandler OnResumed;
+        public event EventHandler OnAdvertisement;
+
+        public string BridgeFileOnPath = Path.Join(BridgeManager.BridgeFilesPath, "swaglyricsGUIOn.txt");
+
+        public bool IsAdvertisement { get; private set; } = false;
         public Process LyricsProcess { get; set; }
 
-        public void GetLyrics()
+        public void StartLyricsBridge()
         {
+            File.Create(BridgeFileOnPath);
             string path = Path.Join(BridgeManager.BridgeFilesPath, "swaglyrics_api_bridge.py");
             LyricsProcess = new Process
             {
@@ -25,7 +31,7 @@ namespace SwagLyricsGUI.Models
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    CreateNoWindow = true,   
+                    CreateNoWindow = true,        
                 },
                 EnableRaisingEvents = true
             };
@@ -52,13 +58,22 @@ namespace SwagLyricsGUI.Models
             {
                 string song = data.Split(":")[0];
 
-                OnNewSong?.Invoke(this, new NewSongEventArgs(song));
+                if(song.Split("by")[0].Trim() == "Advertisement")
+                {
+                    IsAdvertisement = true;
+                    OnAdvertisement?.Invoke(this, EventArgs.Empty);
+                }
+                else 
+                {
+                    IsAdvertisement = false;
+                    OnNewSong?.Invoke(this, new NewSongEventArgs(song));
+                }
             }
             else if(data == "Resumed")
             {
                 OnResumed?.Invoke(this, EventArgs.Empty);
             }
-            else
+            else if(!IsAdvertisement)
             {
                 OnLyricsLoaded?.Invoke(this, new LyricsLoadedEventArgs($"\n{data}\n")); // \n are "Margins"
             }
