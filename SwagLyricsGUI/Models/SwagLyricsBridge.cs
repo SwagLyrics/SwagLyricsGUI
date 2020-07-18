@@ -11,11 +11,12 @@ namespace SwagLyricsGUI.Models
         public event EventHandler<LyricsLoadedEventArgs> OnLyricsLoaded;
         public event EventHandler<LyricsLoadedEventArgs> OnError;
         public event EventHandler OnResumed;
+        public Process LyricsProcess { get; set; }
 
         public void GetLyrics()
         {
             string path = Path.Join(BridgeManager.BridgeFilesPath, "swaglyrics_api_bridge.py");
-            var process = new Process
+            LyricsProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -24,16 +25,16 @@ namespace SwagLyricsGUI.Models
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
-                    CreateNoWindow = true,
+                    CreateNoWindow = true,   
                 },
                 EnableRaisingEvents = true
             };
-            process.OutputDataReceived += Process_OutputDataReceived;
-            process.ErrorDataReceived += Process_ErrorDataReceived;
+            LyricsProcess.OutputDataReceived += Process_OutputDataReceived;
+            LyricsProcess.ErrorDataReceived += Process_ErrorDataReceived;
 
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
+            LyricsProcess.Start();
+            LyricsProcess.BeginOutputReadLine();
+            LyricsProcess.BeginErrorReadLine();
             Console.Read();
         }
 

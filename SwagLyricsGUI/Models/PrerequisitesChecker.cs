@@ -25,7 +25,8 @@ namespace SwagLyricsGUI.Models
             };
             Process process = new Process() { StartInfo = start };
             process.Start();
-            process.WaitForExit();          
+            process.WaitForExit();
+            process.Kill();
         }
 
         private bool CheckPythonInstalled(string postfix)

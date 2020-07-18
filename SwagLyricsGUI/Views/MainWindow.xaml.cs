@@ -18,10 +18,9 @@ namespace SwagLyricsGUI.Views
 #endif
             sv = this.Find<ScrollViewer>("scrollViewer");
             
-            MaxHeight = Screens.Primary.WorkingArea.Height;
+            MaxHeight = Screens.Primary.Bounds.Height;
             Height = Screens.Primary.WorkingArea.Height - 80;
-            Position = new PixelPoint(Screens.Primary.WorkingArea.Right - (int)Width - 15,
-    Screens.Primary.WorkingArea.Bottom - (int)Height - 30);
+            Position = new PixelPoint(Screens.Primary.Bounds.Right - (int)Width - 15, 0);
         }
 
         private void InitializeComponent()

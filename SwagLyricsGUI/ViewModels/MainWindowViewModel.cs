@@ -2,14 +2,19 @@
 using ReactiveUI;
 using SwagLyricsGUI.Models;
 using SwagLyricsGUI.Views;
+using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SwagLyricsGUI.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
-    {
+    {        
+        public ICommand CloseAppCommand { get; set; }
         public static MainWindowViewModel Current { get; set; }
         public ThemeManager ThemeManager { get; set; }
         System.Timers.Timer _timer = new System.Timers.Timer(20)
@@ -77,6 +82,7 @@ namespace SwagLyricsGUI.ViewModels
 
         public MainWindowViewModel()
         {
+            CloseAppCommand = new Command(OnClose);
             bool pythonInstalled = checker.SupportedPythonVersionInstalled();
             if (pythonInstalled)
             {
@@ -104,6 +110,11 @@ namespace SwagLyricsGUI.ViewModels
                 Song = "Unsupported Python Version!";
                 Lyrics = "Minimal supported version is Python 3.6.\nDownload at " + @"https://www.python.org/downloads/";
             }
+        }
+
+        private void OnClose(object obj)
+        {
+            Bridge?.LyricsProcess.Kill(true);
         }
 
         private void Bridge_OnResumed(object sender, System.EventArgs e)
