@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SwagLyricsGUI.Models
 {
@@ -9,13 +6,10 @@ namespace SwagLyricsGUI.Models
     {
         [JsonPropertyName("text")]
         public string Text { get; set; }
-        [JsonPropertyName("source_url")]
-        public string SourceUrl { get; set; }
 
-        public Fact(string text, string source)
+        public Fact(string text)
         {
             Text = text;
-            SourceUrl = source;
         }
 
         public Fact()
@@ -23,6 +17,6 @@ namespace SwagLyricsGUI.Models
 
         }
 
-        public override string ToString() => $"{Text}\n\n\nSource: {SourceUrl}";
+        public override string ToString() => Text.ToString();
     }
 }
