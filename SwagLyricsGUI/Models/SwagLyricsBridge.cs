@@ -57,8 +57,9 @@ namespace SwagLyricsGUI.Models
             if (data.EndsWith(':') && data.Contains("by"))
             {
                 string song = data.Split(":")[0];
+                string[] songArtist = song.Split("by");
 
-                if(song.Split("by")[0].Trim() == "Advertisement")
+                if (songArtist[0].Trim() == "Advertisement" && (songArtist[1].Trim() == "" || songArtist[1].Trim() == "."))
                 {
                     IsAdvertisement = true;
                     OnAdvertisement?.Invoke(this, EventArgs.Empty);
