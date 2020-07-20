@@ -22,7 +22,7 @@ namespace SwagLyricsGUI.ViewModels
         {
             AutoReset = true,            
         };
-        System.Timers.Timer _loadingTimer = new System.Timers.Timer(200)
+        System.Timers.Timer _loadingTimer = new System.Timers.Timer(100)
         {
             AutoReset = true,
         };

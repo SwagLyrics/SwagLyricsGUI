@@ -38,7 +38,7 @@
     <Separator BorderThickness="0.2" BorderBrush="Gray" Margin="0,5,0,5"/>
     <ScrollViewer Name="scrollViewer" Offset="{Binding ScrollBarOffset}" Grid.Row="1" VerticalScrollBarVisibility="Auto">
       <StackPanel Orientation="Vertical" Width="400">   
-        <TextBlock Foreground="{DynamicResource ThemeAccentBrush}" TextWrapping="Wrap" Text="{Binding Song}" Width="385" HorizontalAlignment="Left" Margin="20" FontSize="20"/>
+        <TextBlock Foreground="{DynamicResource ThemeAccentBrush}" TextWrapping="Wrap" Text="{Binding Song}" Width="380" HorizontalAlignment="Left" Margin="20" FontSize="20"/>
         <TextBox Margin="15,0,0,0" AcceptsReturn="True" Name="lyricsText" BorderThickness="0" CaretBrush="Transparent" IsReadOnly="True" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" Text="{Binding Lyrics}" HorizontalAlignment="{Binding LyricsAlignment}" VerticalAlignment="Top"/>
       </StackPanel>
     </ScrollViewer>
