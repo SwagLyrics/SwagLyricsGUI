@@ -13,7 +13,7 @@ namespace SwagLyricsGUI.Models
         public event EventHandler OnResumed;
         public event EventHandler OnAdvertisement;
 
-        public string BridgeFileOnPath = Path.Join(BridgeManager.BridgeFilesPath, "swaglyricsGUIOn.txt");
+        public string BridgeFileOnPath => Path.Combine(BridgeManager.BridgeFilesPath, "swaglyricsGUIOn.txt");
 
         public bool IsAdvertisement { get; private set; } = false;
         public Process LyricsProcess { get; set; }

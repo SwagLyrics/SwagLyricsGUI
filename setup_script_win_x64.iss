@@ -2,7 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SwagLyricsGUI"
-#define MyAppVersion "0.3"
+#define VerFile FileOpen("version.txt")
+#define MyAppVersion FileRead(VerFile)
+#expr FileClose(VerFile)
+#undef VerFile
 #define MyAppPublisher "The SwagLyrics Project"
 #define MyAppURL "http://swaglyrics.dev/"
 #define MyAppExeName "SwagLyricsGUI.exe"
