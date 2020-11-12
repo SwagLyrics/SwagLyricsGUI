@@ -12,3 +12,5 @@ if missing:
     python = sys.executable
     print("Installing swaglyrics...")
     subprocess.check_call([python, '-m', 'pip', 'install', *missing])
+
+print("Press any key to continue.")
